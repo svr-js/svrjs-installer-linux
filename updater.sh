@@ -27,6 +27,8 @@ fi
 ##Copy SVR.JS files
 echo "Copying SVR.JS files..."
 unzip svrjs.zip -d /usr/lib/svrjs svr.compressed modules.compressed svr.js > /dev/null
+unzip svrjs.zip -d /usr/lib/svrjs logviewer.js loghighlighter.js > /dev/null
+unzip svrjs.zip -d /usr/lib/svrjs svrpasswd.js > /dev/null
 pushd .
 cd /usr/lib/svrjs
 node svr.js > /dev/null
