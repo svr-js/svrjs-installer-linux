@@ -26,13 +26,13 @@ fi
 
 ##Copy SVR.JS files
 echo "Copying SVR.JS files..."
-unzip svrjs.zip -d /usr/lib/svrjs svr.compressed modules.compressed svr.js > /dev/null
+unzip -o svrjs.zip -d /usr/lib/svrjs svr.compressed modules.compressed svr.js > /dev/null
 chown svrjs:svrjs /usr/lib/svrjs/svr.compressed /usr/lib/svrjs/modules.compressed /usr/lib/svrjs/svr.js
 chmod 775 /usr/lib/svrjs/svr.compressed /usr/lib/svrjs/modules.compressed /usr/lib/svrjs/svr.js
-unzip svrjs.zip -d /usr/lib/svrjs logviewer.js loghighlight.js > /dev/null
+unzip -o svrjs.zip -d /usr/lib/svrjs logviewer.js loghighlight.js > /dev/null
 chown svrjs:svrjs /usr/lib/svrjs/logviewer.js /usr/lib/svrjs/loghighlight.js
 chmod 775 /usr/lib/svrjs/logviewer.js /usr/lib/svrjs/loghighlight.js
-unzip svrjs.zip -d /usr/lib/svrjs svrpasswd.js > /dev/null
+unzip -o svrjs.zip -d /usr/lib/svrjs svrpasswd.js > /dev/null
 chown svrjs:svrjs /usr/lib/svrjs/svrpasswd.js
 chmod 775 /usr/lib/svrjs/svrpasswd.js
 pushd .
