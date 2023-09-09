@@ -22,70 +22,48 @@ echo '4 - FreeBSD'
 echo '5 - Other'
 echo -n 'Your OS type: '
 read OSTYPE
-if [ "$OSTYPE" == "0" ]; then
-  DISTRO=debian
-elif [ "$OSTYPE" == "1" ]; then
-  DISTRO=rhel
-elif [ "$OSTYPE" == "2" ]; then
-  DISTRO=suse
-elif [ "$OSTYPE" == "3" ]; then
-  DISTRO=arch
-elif [ "$OSTYPE" == "4" ]; then
-  DISTRO=freebsd
-elif [ "$OSTYPE" == "5" ]; then
-  DISTRO=other
-else
-  echo 'Invalid OS type!'
-  exit 1
-fi
+case $OSTYPE in
+  0) DISTRO=debian;;
+  1) DISTRO=rhel;;
+  2) DISTRO=suse;;
+  3) DISTRO=arch;;
+  4) DISTRO=freebsd;;
+  5) DISTRO=other;;
+  *) echo 'Invalid OS type!'; exit 1;;
+esac
 
 ##Define depedency installation functions
 install_nodejs() {
-  if [ "$DISTRO" == "debian" ]; then
-    apt install nodejs
-  elif [ "$DISTRO" == "rhel" ]; then
-    yum install nodejs
-  elif [ "$DISTRO" == "suse" ]; then
-    zypper install nodejs14
-  elif [ "$DISTRO" == "arch" ]; then
-    pacman -S nodejs
-  elif [ "$DISTRO" == "freebsd" ]; then
-    pkg install node
-  else
-    echo "You need to install Node.JS manually"
-  fi
+  case "$DISTRO" in
+    "debian") apt install nodejs;;
+    "rhel") yum install nodejs;;
+    "suse") zypper install nodejs;;
+    "arch") pacman -S nodejs;;
+    "freebsd") pkg install node;;
+    *) echo "You need to install Node.JS manually"
+  esac
 }
 
 install_unzip() {
-  if [ "$DISTRO" == "debian" ]; then
-    apt install unzip
-  elif [ "$DISTRO" == "rhel" ]; then
-    yum install unzip
-  elif [ "$DISTRO" == "suse" ]; then
-    zypper install unzip
-  elif [ "$DISTRO" == "arch" ]; then
-    pacman -S unzip
-  elif [ "$DISTRO" == "freebsd" ]; then
-    pkg install unzip
-  else
-    echo "You need to install unzip manually"
-  fi
+  case "$DISTRO" in
+    "debian") apt install unzip;;
+    "rhel") yum install unzip;;
+    "suse") zypper install unzip;;
+    "arch") pacman -S unzip;;
+    "freebsd") pkg install unzip;;
+    *) echo "You need to install unzip manually"
+  esac
 }
 
 install_setcap() {
-  if [ "$DISTRO" == "debian" ]; then
-    apt install libcap2-bin
-  elif [ "$DISTRO" == "rhel" ]; then
-    yum install libcap
-  elif [ "$DISTRO" == "suse" ]; then
-    zypper install libcap-progs
-  elif [ "$DISTRO" == "arch" ]; then
-    pacman -S libcap
-  elif [ "$DISTRO" == "freebsd" ]; then
-    echo "Your OS doesn't support setcap"
-  else
-    echo "You need to install setcap manually"
-  fi
+  case "$DISTRO" in
+    "debian") apt install libcap2-bin;;
+    "rhel") yum install libcap;;
+    "suse") zypper install libcap-progs;;
+    "arch") pacman -S libcap;;
+    "freebsd") echo "Your OS doesn't support setcap";;
+    *) echo "You need to install setcap manually"
+  esac
 }
 
 ##Check if svrjs.zip exists
@@ -221,6 +199,14 @@ if [ "$systemddetect" == "" ]; then
   echo 'ulimit -n 12000 2>/dev/null' >> /etc/init.d/svrjs
   echo 'RETVAL=0' >> /etc/init.d/svrjs
   echo >> /etc/init.d/svrjs
+  echo 'privilege_check()' >> /etc/init.d/svrjs
+  echo '{' >> /etc/init.d/svrjs
+  echo '  if [ "$(id -u)" != "0" ]; then' >> /etc/init.d/svrjs
+  echo '    echo '"'"'You need to have root privileges to manage SVR.JS service'"'" >> /etc/init.d/svrjs
+  echo '    exit 1' >> /etc/init.d/svrjs
+  echo '  fi' >> /etc/init.d/svrjs
+  echo '}' >> /etc/init.d/svrjs
+  echo >> /etc/init.d/svrjs
   echo 'do_start()' >> /etc/init.d/svrjs
   echo '{' >> /etc/init.d/svrjs
   echo '    if [ ! -f "$lockfile" ] ; then' >> /etc/init.d/svrjs
@@ -234,17 +220,17 @@ if [ "$systemddetect" == "" ]; then
   echo '        RETVAL=1' >> /etc/init.d/svrjs
   echo '    fi' >> /etc/init.d/svrjs
   echo '}' >> /etc/init.d/svrjs
-  echo ' ' >> /etc/init.d/svrjs
+  echo >> /etc/init.d/svrjs
   echo 'echo_failure() {' >> /etc/init.d/svrjs
-  echo '    echo "fail"' >> /etc/init.d/svrjs
+  echo '    echo -n "fail"' >> /etc/init.d/svrjs
   echo '}' >> /etc/init.d/svrjs
   echo >> /etc/init.d/svrjs
   echo 'echo_success() {' >> /etc/init.d/svrjs
-  echo '    echo "success"' >> /etc/init.d/svrjs
+  echo '    echo -n "success"' >> /etc/init.d/svrjs
   echo '}' >> /etc/init.d/svrjs
   echo >> /etc/init.d/svrjs
   echo 'echo_warning() {' >> /etc/init.d/svrjs
-  echo '    echo "warning"' >> /etc/init.d/svrjs
+  echo '    echo -n "warning"' >> /etc/init.d/svrjs
   echo '}' >> /etc/init.d/svrjs
   echo >> /etc/init.d/svrjs
   echo 'do_stop()' >> /etc/init.d/svrjs
@@ -261,7 +247,7 @@ if [ "$systemddetect" == "" ]; then
   echo '        echo "Removed lockfile ( $lockfile )"' >> /etc/init.d/svrjs
   echo '    fi' >> /etc/init.d/svrjs
   echo '}' >> /etc/init.d/svrjs
-  echo ' ' >> /etc/init.d/svrjs
+  echo >> /etc/init.d/svrjs
   echo 'do_status()' >> /etc/init.d/svrjs
   echo '{' >> /etc/init.d/svrjs
   echo '   pid=`ps -aefw | grep "$nodejs $server" | grep -v " grep " | awk '"'"'{print $2}'"'"' | head -n 1`' >> /etc/init.d/svrjs
@@ -274,15 +260,18 @@ if [ "$systemddetect" == "" ]; then
   echo >> /etc/init.d/svrjs
   echo 'case "$1" in' >> /etc/init.d/svrjs
   echo '    start)' >> /etc/init.d/svrjs
+  echo '        privilege_check' >> /etc/init.d/svrjs
   echo '        do_start' >> /etc/init.d/svrjs
   echo '        ;;' >> /etc/init.d/svrjs
   echo '    stop)' >> /etc/init.d/svrjs
+  echo '        privilege_check' >> /etc/init.d/svrjs
   echo '        do_stop' >> /etc/init.d/svrjs
   echo '        ;;' >> /etc/init.d/svrjs
   echo '    status)' >> /etc/init.d/svrjs
   echo '        do_status' >> /etc/init.d/svrjs
   echo '        ;;' >> /etc/init.d/svrjs
   echo '    restart)' >> /etc/init.d/svrjs
+  echo '        privilege_check' >> /etc/init.d/svrjs
   echo '        do_stop' >> /etc/init.d/svrjs
   echo '        do_start' >> /etc/init.d/svrjs
   echo '        RETVAL=$?' >> /etc/init.d/svrjs
@@ -291,7 +280,7 @@ if [ "$systemddetect" == "" ]; then
   echo '        echo "Usage: $0 {start|stop|status|restart}"' >> /etc/init.d/svrjs
   echo '        RETVAL=1' >> /etc/init.d/svrjs
   echo 'esac' >> /etc/init.d/svrjs
-  echo ' ' >> /etc/init.d/svrjs
+  echo >> /etc/init.d/svrjs
   echo 'exit $RETVAL' >> /etc/init.d/svrjs
   chmod a+x /etc/init.d/svrjs
   update-rc.d svrjs defaults
