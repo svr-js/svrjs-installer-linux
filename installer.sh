@@ -130,8 +130,9 @@ mv /usr/lib/svrjs/testdir /var/www/svrjs
 mv /usr/lib/svrjs/serverSideScript.js /var/www/svrjs
 mv /usr/lib/svrjs/logo.png /var/www/svrjs
 mv /usr/lib/svrjs/powered.png /var/www/svrjs
-mv /usr/lib/svrjs/views.txt /var/www/svrjs
-mv /usr/lib/svrjs/hviews.txt /var/www/svrjs
+mv /usr/lib/svrjs/favicon.ico /var/www/svrjs 2>/dev/null
+mv /usr/lib/svrjs/views.txt /var/www/svrjs 2>/dev/null
+mv /usr/lib/svrjs/hviews.txt /var/www/svrjs 2>/dev/null
 cp -R /usr/lib/svrjs/.dirimages /var/www/svrjs
 
 ##Install SVR.JS utilities
