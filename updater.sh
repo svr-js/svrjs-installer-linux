@@ -1,5 +1,8 @@
 #!/bin/bash
 
+##Determine installer directory
+installerroot=$(dirname $0)
+
 ##Print splash
 echo '****************************'
 echo '**SVR.JS updater for Linux**'
@@ -13,7 +16,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 ##Check if svrjs.zip exists
-if ! [ -f svrjs.zip ]; then
+if ! [ -f $installerroot/svrjs.zip ]; then
   echo 'Can'"'"'t find SVR.JS archive in "svrjs.zip"! Make sure to download SVR.JS archive file from https://svrjs.org and rename it to "svrjs.zip".'
   exit 1
 fi

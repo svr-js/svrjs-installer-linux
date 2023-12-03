@@ -1,5 +1,8 @@
 #!/bin/bash
 
+##Determine installer directory
+installerroot=$(dirname $0)
+
 ##Print splash
 echo '******************************'
 echo '**SVR.JS installer for Linux**'
@@ -67,7 +70,7 @@ install_setcap() {
 }
 
 ##Check if svrjs.zip exists
-if ! [ -f svrjs.zip ]; then
+if ! [ -f $installerroot/svrjs.zip ]; then
   echo 'Can'"'"'t find SVR.JS archive in "svrjs.zip"! Make sure to download SVR.JS archive file from https://svrjs.org and rename it to "svrjs.zip".'
   exit 1
 fi
@@ -114,7 +117,7 @@ fi
 ##Copy SVR.JS files
 echo "Copying SVR.JS files..."
 mkdir /usr/lib/svrjs
-unzip svrjs.zip -d /usr/lib/svrjs > /dev/null
+unzip $installerroot/svrjs.zip -d /usr/lib/svrjs > /dev/null
 pushd .
 cd /usr/lib/svrjs
 node svr.js > /dev/null
