@@ -157,6 +157,9 @@ chmod a+x /usr/bin/svrjs-logviewer
 cp /tmp/svrjs-utiltemplate /usr/bin/svrpasswd
 echo 'node svrpasswd.js $PARAMETERS' >> /usr/bin/svrpasswd
 chmod a+x /usr/bin/svrpasswd
+cp /tmp/svrjs-utiltemplate /usr/bin/svrjs
+echo 'node svr.js $PARAMETERS' >> /usr/bin/svrjs
+chmod a+x /usr/bin/svrjs
 
 ##Create user for running SVR.JS and assign permissions of files
 echo "Creating user for running SVR.JS..."
