@@ -4,9 +4,9 @@
 installerroot=$(dirname $0)
 
 ##Print splash
-echo '******************************'
-echo '**SVR.JS installer for Linux**'
-echo '******************************'
+echo '**********************************'
+echo '**SVR.JS installer for GNU/Linux**'
+echo '**********************************'
 echo
 
 ##Check if user is root

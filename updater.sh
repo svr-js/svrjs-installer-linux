@@ -4,9 +4,9 @@
 installerroot=$(dirname $0)
 
 ##Print splash
-echo '****************************'
-echo '**SVR.JS updater for Linux**'
-echo '****************************'
+echo '********************************'
+echo '**SVR.JS updater for GNU/Linux**'
+echo '********************************'
 echo
 
 ##Check if user is root
@@ -43,4 +43,4 @@ cd /usr/lib/svrjs
 node svr.js > /dev/null
 popd
 
-echo "Done! SVR.JS is updated successfully!"
+echo "Done! SVR.JS is updated successfully! You can now restart SVR.JS using \"/etc/init.d/svrjs restart\" or \"systemctl restart svrjs\"."
