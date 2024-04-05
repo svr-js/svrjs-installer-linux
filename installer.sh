@@ -1,8 +1,5 @@
 #!/bin/bash
 
-##Determine installer directory
-installerroot=$(dirname $0)
-
 ##Print splash
 echo '**********************************'
 echo '**SVR.JS installer for GNU/Linux**'
@@ -69,9 +66,60 @@ install_setcap() {
   esac
 }
 
-##Check if svrjs.zip exists
-if ! [ -f $installerroot/svrjs.zip ]; then
-  echo 'Can'"'"'t find SVR.JS archive in "svrjs.zip"! Make sure to download SVR.JS archive file from https://svrjs.org and rename it to "svrjs.zip".'
+##Select SVR.JS installation type
+echo 'Select your SVR.JS installation type. Valid SVR.JS installation types:'
+echo '0 - Latest stable version'
+echo '1 - Latest LTS version'
+echo '2 - Install and update manually'
+echo -n 'Your SVR.JS installation type: '
+read ITP
+case $ITP in
+  0) INSTALLTYPE=stable;;
+  1) INSTALLTYPE=lts;;
+  2) INSTALLTYPE=manual;;
+  *) echo 'Invalid SVR.JS installation type!'; exit 1;;
+esac
+
+##Create .installer.prop file
+echo $INSTALLTYPE > /usr/lib/svrjs/.installer.prop;
+
+##Check the SVR.JS installation type
+INSTALLTYPE="$(cat /usr/lib/svrjs/.installer.prop)"
+if [ "$INSTALLTYPE" == "manual" ]; then
+  echo -n 'Path to SVR.JS zip archive: '
+  read SVRJSZIPARCHIVE
+elif [ "$INSTALLTYPE" == "stable" ]; then
+  SVRJSVERSION="$(curl -fsL https://downloads.svrjs.org/latest.svrjs)"
+  if [ "$SVRJSVERSION" == "" ]; then
+    echo 'There was a problem while determining latest SVR.JS version!'
+    exit 1
+  fi
+  SVRJSZIPARCHIVE="$(mktemp /tmp/svrjs.XXXXX.zip)"
+  if ! curl -fsSL "https://downloads.svrjs.org/svr.js.$SVRJSVERSION.zip" > $SVRJSZIPARCHIVE; then
+    echo 'There was a problem while downloading latest SVR.JS version!'
+    exit 1
+  fi
+  echo "$SVRJSVERSION" > /usr/lib/svrjs/.installer.version
+elif [ "$INSTALLTYPE" == "lts" ]; then
+  SVRJSVERSION="$(curl -fsL https://downloads.svrjs.org/latest-lts.svrjs)"
+  if [ "$SVRJSVERSION" == "" ]; then
+    echo 'There was a problem while determining latest LTS SVR.JS version!'
+    exit 1
+  fi
+  SVRJSZIPARCHIVE="$(mktemp -d /tmp/svrjs.XXXXX.zip)"
+  if ! curl -fsSL "https://downloads.svrjs.org/svr.js.$SVRJSVERSION.zip" > $SVRJSZIPARCHIVE; then
+    echo 'There was a problem while downloading latest LTS SVR.JS version!'
+    exit 1
+  fi
+  echo "$SVRJSVERSION" > /usr/lib/svrjs/.installer.version
+else
+  echo 'There was a problem determining SVR.JS installation type!'
+  exit 1
+fi
+
+##Check if SVR.JS zip archive exists
+if ! [ -f $SVRJSZIPARCHIVE ]; then
+  echo 'Can'"'"'t find SVR.JS archive! Make sure to download SVR.JS archive file from https://svrjs.org and rename it to "svrjs.zip".'
   exit 1
 fi
 
@@ -117,7 +165,7 @@ fi
 ##Copy SVR.JS files
 echo "Copying SVR.JS files..."
 mkdir /usr/lib/svrjs
-unzip $installerroot/svrjs.zip -d /usr/lib/svrjs > /dev/null
+unzip $SVRJSZIPARCHIVE -d /usr/lib/svrjs > /dev/null
 pushd .
 cd /usr/lib/svrjs
 node svr.js > /dev/null
