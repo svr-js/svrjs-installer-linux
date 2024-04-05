@@ -80,11 +80,6 @@ case $ITP in
   *) echo 'Invalid SVR.JS installation type!'; exit 1;;
 esac
 
-##Create .installer.prop file
-echo $INSTALLTYPE > /usr/lib/svrjs/.installer.prop;
-
-##Check the SVR.JS installation type
-INSTALLTYPE="$(cat /usr/lib/svrjs/.installer.prop)"
 if [ "$INSTALLTYPE" == "manual" ]; then
   echo -n 'Path to SVR.JS zip archive: '
   read SVRJSZIPARCHIVE
@@ -99,7 +94,6 @@ elif [ "$INSTALLTYPE" == "stable" ]; then
     echo 'There was a problem while downloading latest SVR.JS version!'
     exit 1
   fi
-  echo "$SVRJSVERSION" > /usr/lib/svrjs/.installer.version
 elif [ "$INSTALLTYPE" == "lts" ]; then
   SVRJSVERSION="$(curl -fsL https://downloads.svrjs.org/latest-lts.svrjs)"
   if [ "$SVRJSVERSION" == "" ]; then
@@ -111,7 +105,6 @@ elif [ "$INSTALLTYPE" == "lts" ]; then
     echo 'There was a problem while downloading latest LTS SVR.JS version!'
     exit 1
   fi
-  echo "$SVRJSVERSION" > /usr/lib/svrjs/.installer.version
 else
   echo 'There was a problem determining SVR.JS installation type!'
   exit 1
@@ -165,6 +158,10 @@ fi
 ##Copy SVR.JS files
 echo "Copying SVR.JS files..."
 mkdir /usr/lib/svrjs
+echo $INSTALLTYPE > /usr/lib/svrjs/.installer.prop;
+if [ "$SVRJSVERSION" != "" ]; then
+  echo "$SVRJSVERSION" > /usr/lib/svrjs/.installer.version
+fi
 unzip $SVRJSZIPARCHIVE -d /usr/lib/svrjs > /dev/null
 pushd .
 cd /usr/lib/svrjs
