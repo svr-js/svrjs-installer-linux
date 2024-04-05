@@ -15,6 +15,7 @@ if [ "$(id -u)" != "0" ]; then
   exit 1
 fi
 
+##Determine the OS
 OS="$(uname -s)"
 if [ "$OS" == "Linux" ]; then
   if [ -f /etc/redhat-release ] ; then
@@ -290,6 +291,7 @@ if [ "$systemddetect" == "" ]; then
   echo 'exit $RETVAL' >> /etc/init.d/svrjs
   chmod a+x /etc/init.d/svrjs
   update-rc.d svrjs defaults
+  /etc/init.d/svrjs start
 else
   echo '[Unit]' > /etc/systemd/system/svrjs.service
   echo 'Description=SVR.JS web server' >> /etc/systemd/system/svrjs.service
@@ -304,6 +306,7 @@ else
   echo '[Install]' >> /etc/systemd/system/svrjs.service
   echo 'WantedBy=multi-user.target' >> /etc/systemd/system/svrjs.service
   systemctl enable svrjs
+  systemctl start svrjs
 fi
 
 echo "Done! SVR.JS is installed successfully!"
