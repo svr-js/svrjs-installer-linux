@@ -15,25 +15,24 @@ if [ "$(id -u)" != "0" ]; then
   exit 1
 fi
 
-##Select OS type
-echo 'Select your OS type. Valid OS types:'
-echo '0 - Debian-based GNU/Linux (e.g. Debian, Devuan, Ubuntu Server)'
-echo '1 - RHEL-based GNU/Linux (e.g. CentOS, Fedora Server, Red Hat Enterprise Linux Server)'
-echo '2 - SUSE-based GNU/Linux (e.g. OpenSUSE Server, SLES)'
-echo '3 - Arch-based GNU/Linux (e.g. Arch, Manjaro)'
-echo '4 - FreeBSD'
-echo '5 - Other'
-echo -n 'Your OS type: '
-read OSTYPE
-case $OSTYPE in
-  0) DISTRO=debian;;
-  1) DISTRO=rhel;;
-  2) DISTRO=suse;;
-  3) DISTRO=arch;;
-  4) DISTRO=freebsd;;
-  5) DISTRO=other;;
-  *) echo 'Invalid OS type!'; exit 1;;
-esac
+OS="$(uname -s)"
+if [ "$OS" == "Linux" ]; then
+  if [ -f /etc/redhat-release ] ; then
+    DISTRO=rhel
+  elif [ -f /etc/SuSE-release ] ; then
+    DISTRO=suse
+  elif [ -f /etc/debian_version ] ; then
+    DISTRO=debian
+  elif [ -f /etc/arch-release ] ; then
+    DISTRO=arch
+  else
+    DISTRO=other
+  fi
+elif [ "$OS" == "FreeBSD" ]; then
+  DISTRO=freebsd
+else
+  DISTRO=other
+fi
 
 ##Define depedency installation functions
 install_nodejs() {
