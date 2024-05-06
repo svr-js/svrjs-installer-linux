@@ -62,7 +62,7 @@ elif [ "$INSTALLTYPE" == "lts" ]; then
     echo 'Your SVR.JS version is up to date!'
     exit 0
   fi
-  SVRJSZIPARCHIVE="$(mktemp -d /tmp/svrjs.XXXXX.zip)"
+  SVRJSZIPARCHIVE="$(mktemp /tmp/svrjs.XXXXX.zip)"
   if ! curl -fsSL "https://downloads.svrjs.org/svr.js.$SVRJSVERSION.zip" > $SVRJSZIPARCHIVE; then
     echo 'There was a problem while downloading latest LTS SVR.JS version!'
     exit 1
