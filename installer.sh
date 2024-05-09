@@ -152,7 +152,7 @@ if [ "$setcapis" == "" ]; then
 else
   ##Grant networking permissions to Node.JS
   echo "Granting networking permissions..."
-  sudo setcap cap_net_bind_service=+ep $nodejs
+  setcap cap_net_bind_service=+ep $nodejs
 fi
 
 ##Copy SVR.JS files
