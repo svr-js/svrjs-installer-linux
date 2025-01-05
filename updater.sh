@@ -81,18 +81,20 @@ fi
 
 ##Copy SVR.JS files
 echo "Copying SVR.JS files..."
-unzip -o $SVRJSZIPARCHIVE -d /usr/lib/svrjs svr.compressed modules.compressed svr.js > /dev/null
-chown svrjs:svrjs /usr/lib/svrjs/svr.compressed /usr/lib/svrjs/modules.compressed /usr/lib/svrjs/svr.js
-chmod 775 /usr/lib/svrjs/svr.compressed /usr/lib/svrjs/modules.compressed /usr/lib/svrjs/svr.js
-unzip -o $SVRJSZIPARCHIVE -d /usr/lib/svrjs logviewer.js loghighlight.js > /dev/null
-chown svrjs:svrjs /usr/lib/svrjs/logviewer.js /usr/lib/svrjs/loghighlight.js
-chmod 775 /usr/lib/svrjs/logviewer.js /usr/lib/svrjs/loghighlight.js
-unzip -o $SVRJSZIPARCHIVE -d /usr/lib/svrjs svrpasswd.js > /dev/null
-chown svrjs:svrjs /usr/lib/svrjs/svrpasswd.js
-chmod 775 /usr/lib/svrjs/svrpasswd.js
-pushd .
-cd /usr/lib/svrjs
-node svr.js > /dev/null
-popd
+unzip -o $SVRJSZIPARCHIVE -d /usr/lib/svrjs svr.compressed modules.compressed svr.js > /dev/null 2> /dev/null
+chown svrjs:svrjs /usr/lib/svrjs/svr.compressed /usr/lib/svrjs/modules.compressed /usr/lib/svrjs/svr.js > /dev/null 2> /dev/null
+chmod 775 /usr/lib/svrjs/svr.compressed /usr/lib/svrjs/modules.compressed /usr/lib/svrjs/svr.js > /dev/null 2> /dev/null
+unzip -o $SVRJSZIPARCHIVE -d /usr/lib/svrjs logviewer.js loghighlight.js > /dev/null 2> /dev/null
+chown svrjs:svrjs /usr/lib/svrjs/logviewer.js /usr/lib/svrjs/loghighlight.js > /dev/null 2> /dev/null
+chmod 775 /usr/lib/svrjs/logviewer.js /usr/lib/svrjs/loghighlight.js > /dev/null 2> /dev/null
+unzip -o $SVRJSZIPARCHIVE -d /usr/lib/svrjs svrpasswd.js > /dev/null 2> /dev/null
+chown svrjs:svrjs /usr/lib/svrjs/svrpasswd.js > /dev/null 2> /dev/null
+chmod 775 /usr/lib/svrjs/svrpasswd.js > /dev/null 2> /dev/null
+if [ -f /usr/lib/svrjs/svr.compressed ]; then
+  pushd .
+  cd /usr/lib/svrjs
+  node svr.js > /dev/null
+  popd
+fi
 
 echo "Done! SVR.JS is updated successfully! You can now restart SVR.JS using \"/etc/init.d/svrjs restart\" or \"systemctl restart svrjs\"."

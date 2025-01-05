@@ -163,25 +163,30 @@ if [ "$SVRJSVERSION" != "" ]; then
   echo "$SVRJSVERSION" > /usr/lib/svrjs/.installer.version
 fi
 unzip $SVRJSZIPARCHIVE -d /usr/lib/svrjs > /dev/null
-pushd .
-cd /usr/lib/svrjs
-node svr.js > /dev/null
-popd
+if [ -f /usr/lib/svrjs/svr.compressed ]; then
+  pushd .
+  cd /usr/lib/svrjs
+  node svr.js > /dev/null
+  popd
+fi
 ln -s /usr/lib/svrjs/log /var/log/svrjs
 ln -s /usr/lib/svrjs/config.json /etc/svrjs-config.json
 node -e 'var fs=require("fs"),config=JSON.parse(fs.readFileSync("/usr/lib/svrjs/config.json").toString());config.wwwroot="/var/www/svrjs",fs.writeFileSync("/usr/lib/svrjs/config.json",JSON.stringify(config,null,2));' > /dev/null
-mkdir -p /var/www/svrjs
-mv /usr/lib/svrjs/index.html /var/www/svrjs
-mv /usr/lib/svrjs/tests.html /var/www/svrjs
-mv /usr/lib/svrjs/licenses /var/www/svrjs
-mv /usr/lib/svrjs/testdir /var/www/svrjs
-mv /usr/lib/svrjs/serverSideScript.js /var/www/svrjs
-mv /usr/lib/svrjs/logo.png /var/www/svrjs
-mv /usr/lib/svrjs/powered.png /var/www/svrjs
-mv /usr/lib/svrjs/favicon.ico /var/www/svrjs 2>/dev/null
-mv /usr/lib/svrjs/views.txt /var/www/svrjs 2>/dev/null
-mv /usr/lib/svrjs/hviews.txt /var/www/svrjs 2>/dev/null
-cp -R /usr/lib/svrjs/.dirimages /var/www/svrjs
+if [ -d /usr/lib/svrjs/wwwroot ]; then
+  mv /usr/lib/svrjs/wwwroot /var/www/svrjs
+else 
+  mkdir -p /var/www/svrjs
+  mv /usr/lib/svrjs/index.html /var/www/svrjs
+  mv /usr/lib/svrjs/tests.html /var/www/svrjs
+  mv /usr/lib/svrjs/licenses /var/www/svrjs
+  mv /usr/lib/svrjs/testdir /var/www/svrjs
+  mv /usr/lib/svrjs/serverSideScript.js /var/www/svrjs
+  mv /usr/lib/svrjs/logo.png /var/www/svrjs
+  mv /usr/lib/svrjs/powered.png /var/www/svrjs
+  mv /usr/lib/svrjs/favicon.ico /var/www/svrjs 2>/dev/null
+  mv /usr/lib/svrjs/views.txt /var/www/svrjs 2>/dev/null
+  mv /usr/lib/svrjs/hviews.txt /var/www/svrjs 2>/dev/null
+fi
 
 ##Install SVR.JS utilities
 echo "Installing SVR.JS utilities..."
@@ -289,19 +294,21 @@ fi
 
 ##Copy SVR.JS files
 echo "Copying SVR.JS files..."
-unzip -o $SVRJSZIPARCHIVE -d /usr/lib/svrjs svr.compressed modules.compressed svr.js > /dev/null
-chown svrjs:svrjs /usr/lib/svrjs/svr.compressed /usr/lib/svrjs/modules.compressed /usr/lib/svrjs/svr.js
-chmod 775 /usr/lib/svrjs/svr.compressed /usr/lib/svrjs/modules.compressed /usr/lib/svrjs/svr.js
-unzip -o $SVRJSZIPARCHIVE -d /usr/lib/svrjs logviewer.js loghighlight.js > /dev/null
-chown svrjs:svrjs /usr/lib/svrjs/logviewer.js /usr/lib/svrjs/loghighlight.js
-chmod 775 /usr/lib/svrjs/logviewer.js /usr/lib/svrjs/loghighlight.js
-unzip -o $SVRJSZIPARCHIVE -d /usr/lib/svrjs svrpasswd.js > /dev/null
-chown svrjs:svrjs /usr/lib/svrjs/svrpasswd.js
-chmod 775 /usr/lib/svrjs/svrpasswd.js
-pushd .
-cd /usr/lib/svrjs
-node svr.js > /dev/null
-popd
+unzip -o $SVRJSZIPARCHIVE -d /usr/lib/svrjs svr.compressed modules.compressed svr.js > /dev/null 2> /dev/null
+chown svrjs:svrjs /usr/lib/svrjs/svr.compressed /usr/lib/svrjs/modules.compressed /usr/lib/svrjs/svr.js > /dev/null 2> /dev/null
+chmod 775 /usr/lib/svrjs/svr.compressed /usr/lib/svrjs/modules.compressed /usr/lib/svrjs/svr.js > /dev/null 2> /dev/null
+unzip -o $SVRJSZIPARCHIVE -d /usr/lib/svrjs logviewer.js loghighlight.js > /dev/null 2> /dev/null
+chown svrjs:svrjs /usr/lib/svrjs/logviewer.js /usr/lib/svrjs/loghighlight.js > /dev/null 2> /dev/null
+chmod 775 /usr/lib/svrjs/logviewer.js /usr/lib/svrjs/loghighlight.js > /dev/null 2> /dev/null
+unzip -o $SVRJSZIPARCHIVE -d /usr/lib/svrjs svrpasswd.js > /dev/null 2> /dev/null
+chown svrjs:svrjs /usr/lib/svrjs/svrpasswd.js > /dev/null 2> /dev/null
+chmod 775 /usr/lib/svrjs/svrpasswd.js > /dev/null 2> /dev/null
+if [ -f /usr/lib/svrjs/svr.compressed ]; then
+  pushd .
+  cd /usr/lib/svrjs
+  node svr.js > /dev/null
+  popd
+fi
 
 echo "Done! SVR.JS is updated successfully! You can now restart SVR.JS using \"/etc/init.d/svrjs restart\" or \"systemctl restart svrjs\"."
 EOF
