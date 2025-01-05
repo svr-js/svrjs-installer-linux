@@ -173,6 +173,7 @@ ln -s /usr/lib/svrjs/log /var/log/svrjs
 ln -s /usr/lib/svrjs/config.json /etc/svrjs-config.json
 node -e 'var fs=require("fs"),config=JSON.parse(fs.readFileSync("/usr/lib/svrjs/config.json").toString());config.wwwroot="/var/www/svrjs",fs.writeFileSync("/usr/lib/svrjs/config.json",JSON.stringify(config,null,2));' > /dev/null
 if [ -d /usr/lib/svrjs/wwwroot ]; then
+  mkdir -p /var/www
   mv /usr/lib/svrjs/wwwroot /var/www/svrjs
 else 
   mkdir -p /var/www/svrjs
