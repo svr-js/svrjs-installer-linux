@@ -169,7 +169,7 @@ node svr.js > /dev/null
 popd
 ln -s /usr/lib/svrjs/log /var/log/svrjs
 ln -s /usr/lib/svrjs/config.json /etc/svrjs-config.json
-node -e 'var fs=require("fs"),config=JSON.parse(fs.readFileSync("/usr/lib/svrjs/config.json").toString());config.wwwroot="/var/www/svrjs",fs.writeFileSync("/usr/lib/svrjs/config.json",JSON.stringify(config));' > /dev/null
+node -e 'var fs=require("fs"),config=JSON.parse(fs.readFileSync("/usr/lib/svrjs/config.json").toString());config.wwwroot="/var/www/svrjs",fs.writeFileSync("/usr/lib/svrjs/config.json",JSON.stringify(config,null,2));' > /dev/null
 mkdir -p /var/www/svrjs
 mv /usr/lib/svrjs/index.html /var/www/svrjs
 mv /usr/lib/svrjs/tests.html /var/www/svrjs
