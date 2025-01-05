@@ -157,7 +157,7 @@ fi
 
 ##Copy SVR.JS files
 echo "Copying SVR.JS files..."
-mkdir /usr/lib/svrjs
+mkdir -p /usr/lib/svrjs
 echo $INSTALLTYPE > /usr/lib/svrjs/.installer.prop;
 if [ "$SVRJSVERSION" != "" ]; then
   echo "$SVRJSVERSION" > /usr/lib/svrjs/.installer.version
